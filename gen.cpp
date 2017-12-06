@@ -24,7 +24,10 @@ class GenChoice{
 };
 
 GenChoice::GenChoice(unsigned int size){
-    srand(time(NULL));
+    random_device rd;
+    mt19937 mt(rd());
+    uniform_int_distribution<unsigned int> dist(0, 100000);
+
     n = size;
 
     for(unsigned int i = 0; i <= size; i++){
@@ -32,7 +35,7 @@ GenChoice::GenChoice(unsigned int size){
             if(i == j){
                 eleccion[make_pair(i, j)] = i;
             } else {
-                eleccion[make_pair(i, j)] = (rand() % (j - i)) + i;
+                eleccion[make_pair(i, j)] = (dist(mt) % (j - i)) + i;
             }
 
         }
@@ -61,7 +64,7 @@ unsigned int GenChoice::size(){
     return n;
 }
 
-ostream& operator<<(ostream& out, const GenChoice& g){
+ostream& operator<<(ostream& out,  GenChoice& g){
     for(int i = 0; i <= g.size(); i++){
         for(int j = i; j <= g.size(); j++){
             out << "[" << i << ", " << j << "] = " << g.guess(i, j) << endl;  
