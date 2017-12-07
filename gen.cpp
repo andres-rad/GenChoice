@@ -26,7 +26,7 @@ class GenChoice{
 GenChoice::GenChoice(unsigned int size){
     random_device rd;
     mt19937 mt(rd());
-    uniform_int_distribution<unsigned int> dist(0, 100000);
+    uniform_int_distribution<unsigned int> dist(0, size-1);
 
     n = size;
 
@@ -35,7 +35,7 @@ GenChoice::GenChoice(unsigned int size){
             if(i == j){
                 eleccion[make_pair(i, j)] = i;
             } else {
-                eleccion[make_pair(i, j)] = (dist(mt) % (j - i)) + i;
+                eleccion[make_pair(i, j)] = dist(mt);
             }
 
         }
@@ -71,5 +71,7 @@ ostream& operator<<(ostream& out,  GenChoice& g){
         }
     }
     return out;
+
+    cout << best[best.size()-1] << endl;
 }
 

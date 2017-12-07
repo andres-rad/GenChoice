@@ -37,7 +37,7 @@ unsigned int cantPasos( vector<unsigned int>& v, GenChoice& gen, unsigned int ta
 
         n++;
 
-    } while(clue != EQ);
+    } while(clue != EQ and n < v.size());
 
     return n;
 }
@@ -63,7 +63,7 @@ void crossOver(GenChoice& gen_modif, GenChoice g2, unsigned int mutation){
     random_device rd;
     mt19937 mt(rd());
     uniform_int_distribution<unsigned int> mut(0, 100);
-    uniform_int_distribution<unsigned int> dist(0, 100000);
+    uniform_int_distribution<unsigned int> dist(0, gen_modif.size()-1);
     
     for(int i = 0; i < gen_modif.size(); i++){
         for(int j = i+1; j <= gen_modif.size(); j++){
@@ -72,7 +72,7 @@ void crossOver(GenChoice& gen_modif, GenChoice g2, unsigned int mutation){
                 unsigned int new_guess = (gen_modif.guess(i, j) + g2.guess(i, j)) / 2;
                 gen_modif.modify_guess(i, j, new_guess);
             } else {
-                gen_modif.modify_guess(i, j, (dist(mt) % (j - i)) + i);
+                gen_modif.modify_guess(i, j, dist(mt));
             }
         }
     }
@@ -109,10 +109,10 @@ int main(){
     for(int generacion = 0; generacion < n_generaciones; generacion++){
         avanzarGen(s, poblacion);
         best.push_back(poblacion[0]);
+        cout << (float)fitness(s, poblacion[0]) << endl;
     }
     
-    for(auto g : best){
-        cout << fitness(s, g) << endl;
-    }
+    cout << best[best.size()-1] << endl;
+
     return 0;
 }
