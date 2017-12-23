@@ -1,6 +1,9 @@
 #include <bits/stdc++.h>
+#include <sys/stat.h>
 #include "gen.cpp"
+
 #define debug(v) cerr<< #v << ": " << v << endl
+
 using namespace std;
 
 
@@ -93,12 +96,31 @@ void avanzarGen(vector<unsigned int>& v, vector<GenChoice>& poblacion){
     }
 }
 
-int main(){
+int main(int argc, char* argv[]){
+
     vector<unsigned int> s;
     unsigned int poblacion_size = 50;
     unsigned int gen_range = 100;
     unsigned int n_generaciones = 100;
     
+    if(argc != 4){
+        cout << "Mala cantidad de parametros. Usando 50 100 100 por defecto." << endl;
+    } else {
+        poblacion_size = stoi(argv[1]);
+        gen_range = stoi(argv[2]);
+        n_generaciones = stoi(argv[3]);
+    }
+
+    string dir = "Mediciones/ps" + to_string(poblacion_size) + "_gr" + \
+                 to_string(gen_range) + "_ng" + to_string(n_generaciones);
+    
+    const int dir_err = mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
+    if(dir_err == -1){
+        cerr << "Error al crear el directorio" << endl;
+        exit(1);
+    }
+
     for(unsigned int i = 0; i < gen_range; i++){
         s.push_back(i);
     }
@@ -106,13 +128,17 @@ int main(){
     vector<GenChoice> poblacion = generarPoblacion(gen_range, poblacion_size);
     vector<GenChoice> best;
 
+    ofstream os;
+
     for(int generacion = 0; generacion < n_generaciones; generacion++){
+        string archivo = dir + "/gen" + to_string(generacion);
         avanzarGen(s, poblacion);
-        best.push_back(poblacion[0]);
-        cout << (float)fitness(s, poblacion[0]) << endl;
+        
+        os.open(archivo);
+        os << poblacion[0];
+        os << fitness(s, poblacion[0]);
+        os.close();
     }
     
-    cout << best[best.size()-1] << endl;
-
     return 0;
 }

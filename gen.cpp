@@ -65,13 +65,15 @@ unsigned int GenChoice::size(){
 }
 
 ostream& operator<<(ostream& out,  GenChoice& g){
-    for(int i = 0; i <= g.size(); i++){
-        for(int j = i; j <= g.size(); j++){
-            out << "[" << i << ", " << j << "] = " << g.guess(i, j) << endl;  
-        }
-    }
-    return out;
 
-    cout << best[best.size()-1] << endl;
+    out << g.size() << endl;
+
+    for(int i = 0; i <= g.size(); i++){
+        for(int j = i; j <= g.size()-1; j++)
+            out << g.guess(i, j) << " ";  
+        out << g.guess(g.size(), g.size()) << endl;
+    }
+
+    return out;
 }
 
